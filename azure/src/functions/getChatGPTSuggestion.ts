@@ -24,7 +24,7 @@ export async function getChatGPTSuggestion(
 
   context.log(`Http function processed request for url "${request.url}"`);
 
-  const responseText = await response.data.choices[0].text;
+  const responseText = response.data.choices[0].text;
 
   return { body: responseText };
 }
