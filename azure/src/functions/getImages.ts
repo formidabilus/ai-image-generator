@@ -36,7 +36,7 @@ export async function getImages(
 
   for await (const blob of containerClient.listBlobsFlat()) {
     const imageUrl = `${blob.name}?${sasToken}`;
-    const url = `https://${accountName}.blob.core.window.net/images/${imageUrl}`;
+    const url = `https://${accountName}.blob.core.windows.net/images/${imageUrl}`;
 
     imageUrls.push({ url, name: blob.name });
   }

@@ -3,6 +3,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-}
+  images: {
+    domains: ["aiimagegeneratordaad6cb8.blob.core.windows.net"],
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

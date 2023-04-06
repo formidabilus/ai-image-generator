@@ -1,4 +1,6 @@
-export async function GET(request: Request) {
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest) {
   const response = await fetch("http://127.0.0.1:7071/api/getImages", {
     cache: "no-store",
   });
@@ -8,7 +10,7 @@ export async function GET(request: Request) {
 
   const data = JSON.parse(textData);
 
-  return new Response(JSON.stringify(data), {
+  return new NextResponse(JSON.stringify(data), {
     status: 200,
   });
 }
