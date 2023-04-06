@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 export async function GET(request: Request) {
   // Connect to Microsoft Azure Function endpoint
   const response = await fetch(
@@ -9,7 +11,7 @@ export async function GET(request: Request) {
 
   const textData = await response.text();
 
-  return new Response(JSON.stringify(textData.trim()), {
+  return new NextResponse(JSON.stringify(textData.trim()), {
     status: 200,
   });
 }
