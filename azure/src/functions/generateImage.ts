@@ -11,7 +11,7 @@ const containerName = "images";
 app.http("generateImage", {
   methods: ["POST"],
   authLevel: "anonymous",
-  handler: async (request: HttpRequest): Promise<any> => {
+  handler: async (request: HttpRequest): Promise<HttpResponseInit> => {
     const { prompt }: any = await request.json();
 
     console.log(`Prompt is ${prompt}`);
@@ -45,5 +45,7 @@ app.http("generateImage", {
     } catch (error) {
       console.log("Error uploading file: ", error.message);
     }
+
+    return { body: "Successfully Uploaded Image!" };
   },
 });
