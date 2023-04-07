@@ -4,6 +4,7 @@ import fetchImages from "@/lib/fetchImages";
 import fetchSuggestionFromChatGPT from "@/lib/fetchSuggestionFromChatGPT";
 import { FormEvent, useState } from "react";
 import useSWR from "swr";
+import { Toaster, toast } from "react-hot-toast";
 
 type Props = {};
 
@@ -38,6 +39,18 @@ const PromptInput = (props: Props) => {
 
     const promptToSend = useSuggestion ? suggestion : inputPrompt;
 
+    const notificationPrompt = promptToSend;
+    const notificationPromptShort =
+      notificationPrompt.length > 19
+        ? notificationPrompt.slice(0, 20)
+        : notificationPrompt;
+
+    console.log("notPrompt: ", notificationPrompt);
+
+    const notification = toast.loading(
+      `DALL·E is creating: ${notificationPromptShort}...`
+    );
+
     const res = await fetch("/api/generateImage", {
       method: "POST",
       headers: {
@@ -47,6 +60,16 @@ const PromptInput = (props: Props) => {
     });
 
     const data = await res.json();
+
+    if (data.error || !notificationPrompt) {
+      toast.error(data.error || "Please enter a prompt...", {
+        id: notification,
+      });
+    } else {
+      toast.success("Your AI Art has been generated!", {
+        id: notification,
+      });
+    }
 
     refreshImages();
   };
@@ -65,8 +88,8 @@ const PromptInput = (props: Props) => {
     setEffect({ ...buttonEffect, useSuggestionButton: true });
   };
   const handleNewSuggestionClick = () => {
-    mutate;
     setEffect({ ...buttonEffect, newSuggestionButton: true });
+    mutate();
   };
 
   return (
@@ -89,7 +112,9 @@ const PromptInput = (props: Props) => {
         />
         <button
           type="submit"
-          className={`hover:opacity-90 p-4 font-bold ${
+          className={`${
+            buttonEffect.generateButton && "animate-wiggle"
+          } hover:opacity-90 p-4 font-bold ${
             input
               ? "bg-green-700 text-white transition-colors duration-200"
               : "text-gray-300 cursor-not-allowed"
