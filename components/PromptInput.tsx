@@ -1,5 +1,6 @@
 "use client";
 
+import fetchImages from "@/lib/fetchImages";
 import fetchSuggestionFromChatGPT from "@/lib/fetchSuggestionFromChatGPT";
 import { FormEvent, useState } from "react";
 import useSWR from "swr";
@@ -23,6 +24,10 @@ const PromptInput = (props: Props) => {
     revalidateOnFocus: false,
   });
 
+  const { mutate: refreshImages } = useSWR("/api/getImages", fetchImages, {
+    revalidateOnFocus: false,
+  });
+
   const loading = isLoading || isValidating;
 
   const submitPrompt = async (useSuggestion?: boolean) => {
@@ -42,12 +47,26 @@ const PromptInput = (props: Props) => {
     });
 
     const data = await res.json();
+
+    refreshImages();
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     await submitPrompt();
+  };
+
+  const handleGenerateClick = () => {
+    setEffect({ ...buttonEffect, generateButton: true });
+  };
+  const handleUseSuggestionClick = () => {
+    submitPrompt(true);
+    setEffect({ ...buttonEffect, useSuggestionButton: true });
+  };
+  const handleNewSuggestionClick = () => {
+    mutate;
+    setEffect({ ...buttonEffect, newSuggestionButton: true });
   };
 
   return (
@@ -76,7 +95,7 @@ const PromptInput = (props: Props) => {
               : "text-gray-300 cursor-not-allowed"
           }`}
           disabled={!input}
-          onClick={() => setEffect({ ...buttonEffect, generateButton: true })}
+          onClick={handleGenerateClick}
           onAnimationEnd={() =>
             setEffect({ ...buttonEffect, generateButton: false })
           }
@@ -88,10 +107,7 @@ const PromptInput = (props: Props) => {
             buttonEffect.useSuggestionButton && "animate-wiggle"
           } hover:bg-green-700 p-4 bg-green-600/90 text-white transition-colors duration-200 font-bold disabled:text-gray-300 disabled:cursor-not-allowed disabled:bg-gray-400`}
           type="button"
-          onClick={() => {
-            submitPrompt(true);
-            setEffect({ ...buttonEffect, useSuggestionButton: true });
-          }}
+          onClick={handleUseSuggestionClick}
           onAnimationEnd={() =>
             setEffect({ ...buttonEffect, useSuggestionButton: false })
           }
@@ -103,10 +119,7 @@ const PromptInput = (props: Props) => {
             buttonEffect.newSuggestionButton && "animate-wiggle"
           } hover:opacity-90 p-4 bg-white text-green-700 transition-colors duration-200 border-none rounded-b-md md:rounded-r-md md:rounded-bl-none font-bold`}
           type="button"
-          onClick={() => {
-            mutate;
-            setEffect({ ...buttonEffect, newSuggestionButton: true });
-          }}
+          onClick={handleNewSuggestionClick}
           onAnimationEnd={() =>
             setEffect({ ...buttonEffect, newSuggestionButton: false })
           }
