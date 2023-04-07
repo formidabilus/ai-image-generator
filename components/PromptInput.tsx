@@ -8,6 +8,11 @@ type Props = {};
 
 const PromptInput = (props: Props) => {
   const [input, setInput] = useState("");
+  const [buttonEffect, setEffect] = useState({
+    generateButton: false,
+    useSuggestionButton: false,
+    newSuggestionButton: false,
+  });
 
   const {
     data: suggestion,
@@ -71,20 +76,40 @@ const PromptInput = (props: Props) => {
               : "text-gray-300 cursor-not-allowed"
           }`}
           disabled={!input}
+          onClick={() => setEffect({ ...buttonEffect, generateButton: true })}
+          onAnimationEnd={() =>
+            setEffect({ ...buttonEffect, generateButton: false })
+          }
         >
           Generate
         </button>
         <button
-          className="hover:opacity-90 p-4 bg-green-600 text-white transition-colors duration-200 font-bold disabled:text-gray-300 disabled:cursor-not-allowed disabled:bg-gray-400"
+          className={`${
+            buttonEffect.useSuggestionButton && "animate-wiggle"
+          } hover:bg-green-700 p-4 bg-green-600/90 text-white transition-colors duration-200 font-bold disabled:text-gray-300 disabled:cursor-not-allowed disabled:bg-gray-400`}
           type="button"
-          onClick={() => submitPrompt(true)}
+          onClick={() => {
+            submitPrompt(true);
+            setEffect({ ...buttonEffect, useSuggestionButton: true });
+          }}
+          onAnimationEnd={() =>
+            setEffect({ ...buttonEffect, useSuggestionButton: false })
+          }
         >
           Use Suggestion
         </button>
         <button
-          className="hover:opacity-90 p-4 bg-white text-green-700 transition-colors duration-200 border-none rounded-b-md md:rounded-r-md md:rounded-bl-none font-bold"
+          className={`${
+            buttonEffect.newSuggestionButton && "animate-wiggle"
+          } hover:opacity-90 p-4 bg-white text-green-700 transition-colors duration-200 border-none rounded-b-md md:rounded-r-md md:rounded-bl-none font-bold`}
           type="button"
-          onClick={mutate}
+          onClick={() => {
+            mutate;
+            setEffect({ ...buttonEffect, newSuggestionButton: true });
+          }}
+          onAnimationEnd={() =>
+            setEffect({ ...buttonEffect, newSuggestionButton: false })
+          }
         >
           New Suggestion
         </button>
