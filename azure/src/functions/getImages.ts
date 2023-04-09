@@ -10,8 +10,8 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 
-const accountName = process.env.accountName;
-const accountKey = process.env.accountKey;
+const accountName = process.env.accountName!;
+const accountKey = process.env.accountKey!;
 
 const containerName = "images";
 
@@ -41,9 +41,19 @@ export async function getImages(
     imageUrls.push({ url, name: blob.name });
   }
 
-  const sortedImageUrls = imageUrls.sort((a, b) => {
-    const aName = a.name.split("_").pop().toString().split(".").shift();
-    const bName = b.name.split("_").pop().toString().split(".").shift();
+  const sortedImageUrls = imageUrls?.sort((a, b) => {
+    const aName: any = a!?.name
+      ?.split("_")
+      ?.pop()
+      ?.toString()
+      ?.split(".")
+      ?.shift()!;
+    const bName: any = b!?.name
+      ?.split("_")
+      ?.pop()
+      ?.toString()
+      ?.split(".")
+      ?.shift()!;
 
     return bName - aName;
   });

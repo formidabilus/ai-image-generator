@@ -22,7 +22,7 @@ app.http("generateImage", {
       size: "1024x1024",
     });
 
-    const image_url = response.data.data[0].url;
+    const image_url = response.data.data[0].url!;
 
     //  Download the image and return it as an arraybuffer
     const res = await axios.get(image_url, { responseType: "arraybuffer" });
@@ -43,7 +43,7 @@ app.http("generateImage", {
       await blockBlobClient.uploadData(arraybuffer);
       console.log("File uploaded successfully!");
     } catch (error) {
-      console.log("Error uploading file: ", error.message);
+      console.log("Error uploading file: ", error);
     }
 
     return { body: "Successfully Uploaded Image!" };

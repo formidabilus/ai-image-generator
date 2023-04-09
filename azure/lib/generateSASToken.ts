@@ -5,8 +5,8 @@ import {
   generateBlobSASQueryParameters,
 } from "@azure/storage-blob";
 
-const accountName = process.env.accountName;
-const accountKey = process.env.accountKey;
+const accountName = process.env.accountName!;
+const accountKey = process.env.accountKey!;
 const containerName = "images";
 
 const sharedKeyCredential = new StorageSharedKeyCredential(
